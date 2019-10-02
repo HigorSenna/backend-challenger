@@ -48,6 +48,8 @@ scalability.
 ## Stack
 - Java 1.8
 
+>WARNING: To start anyone enviroments, the database backend_challenger must be created
+
 ## How to start DEVELOPMENT enviroment
  Export the enviroment variable: 
  *-Dspring.profiles.active=development*

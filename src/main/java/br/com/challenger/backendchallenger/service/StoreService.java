@@ -14,7 +14,7 @@ public class StoreService {
     private StoreRepository storeRepository;
 
     public void save(StoreDTO storeDTO) {
-        //TODO: Validate store already exists before persist
+        //TODO: Validate store already exists before persist (when is new store only)
         Store store = StoreConverter.convert(storeDTO);
         this.storeRepository.save(store);
     }

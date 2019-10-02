@@ -45,13 +45,13 @@ scalability.
 * Swagger
 * Clean Code
 
-##Stack
+## Stack
 - Java 1.8
 
-##How to start DEVELOPMENT enviroment
+## How to start DEVELOPMENT enviroment
  Export the enviroment variable: 
  *-Dspring.profiles.active=development*
  
-##How to start PRODUCTION enviroment
+## How to start PRODUCTION enviroment
  Run the command in server:
  *java -jar -Dspring.profiles.active=production {package}.jar*

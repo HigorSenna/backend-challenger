@@ -1,4 +1,7 @@
 package br.com.challenger.backendchallenger.repository;
 
-public interface StoreRepository {
+import br.com.challenger.backendchallenger.entity.Store;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface StoreRepository extends JpaRepository<Store, Long> {
 }

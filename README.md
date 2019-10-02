@@ -14,14 +14,14 @@ If you think something is really necessary but you don’t have enough time to i
 Tasks
 Your task is to develop one (or more, feel free) RESTful service(s) to:
 
-Create a Store
-Update a Store information
-Retrieve a Store by parameters
-Create an Order with items
-Create a Payment for an Order
-Retrieve an Order by parameters
+.Create a Store
+.Update a Store information
+.Retrieve a Store by parameters
+.Create an Order with items
+.Create a Payment for an Order
+..Retrieve an Order by parameters
 Refund Order or any Order Item
-Fork this repository and submit your code with partial commits.
+.Fork this repository and submit your code with partial commits.
 
 Business Rules
 A Store is composed by name and address

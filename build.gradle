@@ -12,6 +12,13 @@ repositories {
 	mavenCentral()
 }
 
+test {
+	useJUnitPlatform()
+	systemProperties = [
+			'junit.platform.output.capture.stderr': 'true'
+	]
+}
+
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-data-rest'
@@ -19,5 +26,7 @@ dependencies {
 	runtimeOnly 'mysql:mysql-connector-java'
 	runtime group: 'org.flywaydb', name: 'flyway-gradle-plugin', version: '3.0'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testImplementation('org.junit.jupiter:junit-jupiter-api:5.5.2')
+	testRuntimeOnly('org.junit.jupiter:junit-jupiter-engine:5.5.2')
 
 }

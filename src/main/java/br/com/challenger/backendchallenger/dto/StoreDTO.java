@@ -5,6 +5,14 @@ public class StoreDTO {
     private Long id;
     private String name;
 
+    public StoreDTO() {
+    }
+
+    public StoreDTO(Long id, String name) {
+        this.id = id;
+        this.name = name;
+    }
+
     public Long getId() {
         return id;
     }

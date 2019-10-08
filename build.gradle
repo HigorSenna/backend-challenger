@@ -14,17 +14,16 @@ repositories {
 
 test {
 	useJUnitPlatform()
-	systemProperties = [
-			'junit.platform.output.capture.stderr': 'true'
-	]
 }
 
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-data-rest'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
+	compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.9'
 	runtimeOnly 'mysql:mysql-connector-java'
 	runtime group: 'org.flywaydb', name: 'flyway-gradle-plugin', version: '3.0'
+	testCompile group: 'org.mockito', name: 'mockito-junit-jupiter', version: '2.23.4'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation('org.junit.jupiter:junit-jupiter-api:5.5.2')
 	testRuntimeOnly('org.junit.jupiter:junit-jupiter-engine:5.5.2')

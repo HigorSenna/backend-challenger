@@ -8,11 +8,14 @@ public final class StoreConverter {
     private StoreConverter() {}
 
     public static Store convert(StoreDTO storeDTO) {
+        if(storeDTO != null) {
+            Store store = new Store();
+            store.setId(storeDTO.getId());
+            store.setName(storeDTO.getName());
 
-        Store store = new Store();
-        store.setId(storeDTO.getId());
-        store.setName(storeDTO.getName());
+            return store;
+        }
 
-        return store;
+        return null;
     }
 }

@@ -57,3 +57,7 @@ scalability.
 ## How to start PRODUCTION enviroment
  Run the command in server:
  *java -jar -Dspring.profiles.active=production {package}.jar*
+ 
+## API DOCUMENTATION:
+
+Afer you start the project, access [Documentation Link](http://localhost:8082/api/index.html) 

@@ -37,9 +37,6 @@ public class SwaggerConfiguration extends WebMvcConfigurationSupport {
     protected void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("**")
                 .addResourceLocations("classpath:/swagger-ui/");
-
-//        registry.addResourceHandler("/webjars/**")
-//                .addResourceLocations("classpath:/META-INF/resources/webjars/");
     }
 
 }

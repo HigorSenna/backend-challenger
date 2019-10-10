@@ -18,4 +18,16 @@ public final class StoreConverter {
 
         return null;
     }
+
+    public static StoreDTO convert(Store store) {
+        if(store != null) {
+            StoreDTO storeDTO = new StoreDTO();
+            storeDTO.setId(store.getId());
+            storeDTO.setName(store.getName());
+
+            return storeDTO;
+        }
+
+        return null;
+    }
 }

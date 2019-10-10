@@ -14,11 +14,11 @@ public class StoreService {
     @Autowired
     private StoreRepository storeRepository;
 
-    public void save(StoreDTO storeDTO) {
+    public StoreDTO save(StoreDTO storeDTO) {
         //TODO: Validate store already exists before persist (when is new store only)
         Store store = StoreConverter.convert(storeDTO);
         if (store != null) {
-            this.storeRepository.save(store);
+            return StoreConverter.convert(this.storeRepository.save(store));
         }
         //Logar
         throw new GeneralErrorException();

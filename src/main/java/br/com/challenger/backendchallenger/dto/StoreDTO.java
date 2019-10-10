@@ -1,8 +1,13 @@
 package br.com.challenger.backendchallenger.dto;
 
+import io.swagger.annotations.ApiModelProperty;
+
 public class StoreDTO {
 
+    @ApiModelProperty(notes = "id of store, not necessary to create")
     private Long id;
+
+    @ApiModelProperty(required = true, notes = "name of storage")
     private String name;
 
     public StoreDTO() {

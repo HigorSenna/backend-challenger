@@ -19,8 +19,8 @@ public class StoreController {
     private StoreService storeService;
 
     @PostMapping
-    @ApiOperation(value = "Save a storage")
-    public void save(@RequestBody StoreDTO storeDTO) {
-        this.storeService.save(storeDTO);
+    @ApiOperation(value = "Save a storage", response = StoreDTO.class)
+    public StoreDTO save(@RequestBody StoreDTO storeDTO) {
+        return this.storeService.save(storeDTO);
     }
 }

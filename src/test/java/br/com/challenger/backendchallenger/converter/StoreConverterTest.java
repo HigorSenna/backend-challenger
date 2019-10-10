@@ -19,9 +19,17 @@ class StoreConverterTest {
     }
 
     @Test
-    void shouldReturnNull() {
-        Store store = StoreConverter.convert(null);
+    void shouldReturnNullStoreDTO() {
+        StoreDTO storeDTO = null;
+        Store store = StoreConverter.convert(storeDTO);
         assertNull(store);
+    }
+
+    @Test
+    void shouldReturnNullStore() {
+        Store store = null;
+        StoreDTO storeDTO = StoreConverter.convert(store);
+        assertNull(storeDTO);
     }
 
     private StoreDTO buildStoreDTO() {

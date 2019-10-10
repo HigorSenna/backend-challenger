@@ -10,5 +10,5 @@ public class GeneralErrorException extends RuntimeException {
         super(message);
     }
 
-    public GeneralErrorException(){};
+    public GeneralErrorException(){}
 }

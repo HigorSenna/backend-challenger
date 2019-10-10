@@ -1,6 +1,9 @@
 package br.com.challenger.backendchallenger.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.annotations.ApiModelProperty;
+
+import javax.validation.constraints.NotBlank;
 
 public class StoreDTO {
 
@@ -8,6 +11,7 @@ public class StoreDTO {
     private Long id;
 
     @ApiModelProperty(required = true, notes = "name of storage")
+    @NotBlank(message = "Name is mandatory")
     private String name;
 
     public StoreDTO() {
@@ -17,6 +21,12 @@ public class StoreDTO {
         this.id = id;
         this.name = name;
     }
+
+    @JsonIgnore
+    public boolean isNew() {
+        return this.id == null;
+    }
+
 
     public Long getId() {
         return id;

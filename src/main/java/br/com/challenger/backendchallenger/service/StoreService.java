@@ -23,4 +23,9 @@ public class StoreService {
         //Logar
         throw new GeneralErrorException();
     }
+
+    public StoreDTO update(Long id, StoreDTO storeDTO) {
+        storeDTO.setId(id);
+        return this.save(storeDTO);
+    }
 }

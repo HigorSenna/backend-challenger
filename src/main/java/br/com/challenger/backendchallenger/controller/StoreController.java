@@ -8,7 +8,13 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/stores")
@@ -29,9 +35,9 @@ public class StoreController {
 
     @PostMapping
     @ApiOperation(value = "Save a storage", response = StoreDTO.class)
-    public ResponseEntity<StoreDTO> save(@RequestBody StoreDTO storeDTO) throws BusinessException {
+    public ResponseEntity<StoreDTO> save(@RequestBody @Valid StoreDTO storeDTO) throws BusinessException {
 
-        if(storeDTO.getId() == null) {
+        if(storeDTO.isNew()) {
             StoreDTO storeDToCreated = this.storeService.save(storeDTO);
             return new ResponseEntity<>(storeDToCreated, HttpStatus.CREATED);
         }
@@ -39,15 +45,30 @@ public class StoreController {
         throw new BusinessException(OPERATION_NOT_ALLOWED);
     }
 
-    @PutMapping
+    @PutMapping("/{id}")
     @ApiOperation(value = "Update a storage", response = StoreDTO.class)
-    public ResponseEntity<StoreDTO> update(@RequestBody StoreDTO storeDTO) throws BusinessException {
+    public ResponseEntity<StoreDTO> update(@PathVariable("id") Long id, @RequestBody @Valid StoreDTO storeDTO) throws BusinessException {
 
-        if(storeDTO.getId() != null) {
-            StoreDTO storeDToCreated = this.storeService.save(storeDTO);
-            return new ResponseEntity<>(storeDToCreated, HttpStatus.OK);
+        if(id != null) {
+            StoreDTO storeDToUpdated = this.storeService.update(id, storeDTO);
+            return new ResponseEntity<>(storeDToUpdated, HttpStatus.OK);
         }
         //logar -> update é aceito apenas para objetos que possuam ID
         throw new BusinessException(OPERATION_NOT_ALLOWED);
     }
+
+    //TODO: Extrair para uma classe?
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public Map<String, String> handleValidationExceptions(MethodArgumentNotValidException ex) {
+        Map<String, String> errors = new HashMap<>();
+        ex.getBindingResult().getAllErrors().forEach((error) -> {
+            String fieldName = ((FieldError) error).getField();
+            String errorMessage = error.getDefaultMessage();
+            errors.put(fieldName, errorMessage);
+        });
+        return errors;
+    }
+
+
 }

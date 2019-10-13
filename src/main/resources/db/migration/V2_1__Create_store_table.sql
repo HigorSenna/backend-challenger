@@ -3,7 +3,6 @@ CREATE TABLE `backend_challenger`.`store` (
   `address_id` INT NULL,
   `name` VARCHAR(45) NOT NULL,
   PRIMARY KEY (`id`),
-  INDEX `fk_store_address_idx` (`address_id` ASC),
   CONSTRAINT `fk_store_address`
     FOREIGN KEY (`address_id`)
     REFERENCES `backend_challenger`.`address` (`id`)

@@ -5,6 +5,7 @@ import io.swagger.annotations.ApiModelProperty;
 
 import javax.validation.constraints.NotBlank;
 
+
 public class StoreDTO {
 
     @ApiModelProperty(notes = "id of store, not necessary to create")

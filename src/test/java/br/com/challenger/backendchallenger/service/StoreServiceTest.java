@@ -1,41 +1,42 @@
 package br.com.challenger.backendchallenger.service;
 
 import br.com.challenger.backendchallenger.dto.StoreDTO;
-import br.com.challenger.backendchallenger.entity.Store;
-import br.com.challenger.backendchallenger.exception.GeneralErrorException;
-import br.com.challenger.backendchallenger.repository.StoreRepository;
+import br.com.challenger.backendchallenger.exception.BusinessException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
 
-@ExtendWith(MockitoExtension.class)
-public class StoreServiceTest {
+//TODO: Testes que estão falhando nao estão interrompendo o build!! pq?
+public class StoreServiceTest extends BaseServiceTest {
 
-    @Mock
-    StoreRepository storeRepository;
-
-    @InjectMocks
+    @Autowired
     StoreService storeService;
 
     @Test
-    void shouldReturnException() {
-        StoreDTO storeDTO = null;
-        Assertions.assertThrows(GeneralErrorException.class, () -> storeService.save(storeDTO));
+    void shouldInsert() throws BusinessException {
+        StoreDTO storeDTO = buildStoreDTO();
+        StoreDTO storeDTOSaved = this.storeService.save(storeDTO);
+        Assertions.assertNotNull(storeDTOSaved);
+    }
+
+
+    @Test
+    void shouldReturnBusinessException() throws BusinessException {
+        StoreDTO storeDTO = buildStoreDTO();
+        this.storeService.save(storeDTO);
+        Assertions.assertThrows(BusinessException.class, () -> storeService.save(storeDTO));
     }
 
     @Test
-    void shouldInsert() {
-        StoreDTO storeDTO = buildStoreDTO();
-        Mockito.when(storeRepository.save(Mockito.any(Store.class))).thenReturn(new Store());
-        storeService.save(storeDTO);
+    void testeFalhaParaInterromperBuild(){
+        Assertions.assertNull(new StoreDTO());
     }
 
     private StoreDTO buildStoreDTO() {
-        return new StoreDTO(1L, "StoreName");
+        StoreDTO storeDTO = new StoreDTO();
+        storeDTO.setName("Store to test");
+
+        return storeDTO;
     }
 
 }

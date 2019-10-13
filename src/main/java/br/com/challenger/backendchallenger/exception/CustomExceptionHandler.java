@@ -14,7 +14,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 @ControllerAdvice
 public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
 
-    @ExceptionHandler({GeneralErrorException.class})
+    @ExceptionHandler({GeneralErrorException.class, NotFoundException.class})
     protected ResponseEntity<Object> exceptionHandler(Exception ex, WebRequest request) {
         ResponseDTO response = new ResponseDTO();
 

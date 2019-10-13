@@ -13,6 +13,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import javax.websocket.server.PathParam;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -55,6 +56,14 @@ public class StoreController {
         }
         //logar -> update é aceito apenas para objetos que possuam ID
         throw new BusinessException(OPERATION_NOT_ALLOWED);
+    }
+
+    @GetMapping
+    public ResponseEntity<StoreDTO> find(@RequestParam(name = "id", required = false) Long id,
+                                         @RequestParam(name = "name", required = false) String name) throws BusinessException {
+
+        StoreDTO storeDTO = this.storeService.find(id, name);
+        return new ResponseEntity<>(storeDTO, HttpStatus.OK);
     }
 
     //TODO: Extrair para uma classe?

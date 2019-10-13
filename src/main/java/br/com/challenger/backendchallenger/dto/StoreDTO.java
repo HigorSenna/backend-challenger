@@ -18,6 +18,10 @@ public class StoreDTO {
     public StoreDTO() {
     }
 
+    public StoreDTO(String name) {
+        this.name = name;
+    }
+
     public StoreDTO(Long id, String name) {
         this.id = id;
         this.name = name;

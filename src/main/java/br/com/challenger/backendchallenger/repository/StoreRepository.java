@@ -16,7 +16,7 @@ public interface StoreRepository extends JpaRepository<Store, Long> {
     @Query("SELECT new br.com.challenger.backendchallenger.dto.StoreDTO(store.id, store.name) " +
             "FROM Store store                                                                 " +
             "WHERE 1=1                                                                        " +
-            "AND (:storeName is null OR store.name = :storeName)                               " +
+            "AND (:storeName is null OR store.name = :storeName)                              " +
             "AND (:storeId is null OR store.id = :storeId)                                    " )
     StoreDTO find(@Param("storeId") Long storeId, @Param("storeName") String storeName);
 }

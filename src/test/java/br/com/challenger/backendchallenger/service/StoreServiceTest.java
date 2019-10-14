@@ -10,24 +10,24 @@ import org.springframework.beans.factory.annotation.Autowired;
 class StoreServiceTest extends BaseServiceTest {
 
     @Autowired
-    StoreService storeService;
+    private StoreService storeService;
 
     @Test
     void shouldInsert() throws BusinessException {
-        StoreDTO storeDTOSaved = this.storeService.save(new StoreDTO("Store 1"));
+        StoreDTO storeDTOSaved = this.storeService.save(new StoreDTO(super.randomString()));
         Assertions.assertNotNull(storeDTOSaved);
     }
 
     @Test
     void shouldReturnBusinessExceptionWhenStoreAlreadyExists() throws BusinessException {
-        StoreDTO storeDTO = new StoreDTO("Store 2");
+        StoreDTO storeDTO = new StoreDTO(super.randomString());
         this.storeService.save(storeDTO);
         Assertions.assertThrows(BusinessException.class, () -> storeService.save(storeDTO));
     }
 
     @Test
     void shouldUpdate() throws BusinessException {
-        StoreDTO storeDtoSaved = this.storeService.save(new StoreDTO("Store 3"));
+        StoreDTO storeDtoSaved = this.storeService.save(new StoreDTO(super.randomString()));
         storeDtoSaved.setName("Another Name");
 
         StoreDTO storeDtoUpdated = this.storeService.update(storeDtoSaved.getId(), storeDtoSaved);
@@ -42,7 +42,7 @@ class StoreServiceTest extends BaseServiceTest {
 
     @Test
     void shouldReturnStoreByName() throws BusinessException {
-        String storeName = "Store5";
+        String storeName = super.randomString();
         this.storeService.save(new StoreDTO(storeName));
         StoreDTO storeDTO = this.storeService.find(null, storeName);
         Assertions.assertNotNull(storeDTO);
@@ -50,13 +50,13 @@ class StoreServiceTest extends BaseServiceTest {
 
     @Test
     void shouldReturnStoreById() throws BusinessException {
-        StoreDTO storeDtoSaved = this.storeService.save(new StoreDTO("Store6"));
+        StoreDTO storeDtoSaved = this.storeService.save(new StoreDTO(super.randomString()));
         StoreDTO storeDtoFound = this.storeService.find(storeDtoSaved.getId(), null);
         Assertions.assertNotNull(storeDtoFound);
     }
 
     @Test
-    void shouldReturnBusinessExceptionWhenAllParamsAreNull() throws BusinessException {
+    void shouldReturnBusinessExceptionWhenAllParamsAreNull() {
         Assertions.assertThrows(BusinessException.class, () ->  this.storeService.find(null, null));
     }
 

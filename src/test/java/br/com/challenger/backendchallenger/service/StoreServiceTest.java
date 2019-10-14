@@ -7,9 +7,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-//TODO: Testes que estão falhando nao estão interrompendo o build!! pq?
-//TODO: Resposa: versão do JUNIT 5.5.2 está com problema.., usando a 5.3.2  foi OK
-public class StoreServiceTest extends BaseServiceTest {
+class StoreServiceTest extends BaseServiceTest {
 
     @Autowired
     StoreService storeService;

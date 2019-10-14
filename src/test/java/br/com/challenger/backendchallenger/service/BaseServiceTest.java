@@ -6,5 +6,5 @@ import org.springframework.test.context.ActiveProfiles;
 
 @SpringBootTest(classes = { BackendChallengerApplication.class})
 @ActiveProfiles("test")
-public abstract class BaseServiceTest {
+abstract class BaseServiceTest {
 }

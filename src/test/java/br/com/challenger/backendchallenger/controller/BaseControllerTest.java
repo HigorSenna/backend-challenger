@@ -17,6 +17,10 @@ import org.springframework.web.context.WebApplicationContext;
 
 import java.io.IOException;
 
+import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+
 @SpringBootTest(classes = { BackendChallengerApplication.class})
 @ActiveProfiles("test")
 @WebAppConfiguration
@@ -30,6 +34,30 @@ abstract class BaseControllerTest {
     @BeforeEach
     public void setUp() {
         this.mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
+    }
+
+    <T> T sendPost(String requestBody, String url, Class<T> clazz) throws Exception {
+        MvcResult mvcResult = this.sendPost(requestBody, url);
+        return getResponseObject(mvcResult, clazz);
+    }
+
+    MvcResult sendPost(String requestBody, String url) throws Exception {
+        return this.mockMvc.perform(post(url)
+                .contentType(APPLICATION_JSON_VALUE)
+                .content(requestBody))
+                .andReturn();
+    }
+
+    <T> T sendPut(String requestBody, String url, Class<T> clazz) throws Exception {
+        MvcResult mvcResult = this.sendPut(requestBody, url);
+        return getResponseObject(mvcResult, clazz);
+    }
+
+    MvcResult sendPut(String requestBody, String url) throws Exception {
+        return this.mockMvc.perform(put(url)
+                .contentType(APPLICATION_JSON_VALUE)
+                .content(requestBody))
+                .andReturn();
     }
 
     String convertToJson(Object obj) throws JsonProcessingException {

@@ -48,13 +48,8 @@ public class StoreController {
     @PutMapping("/{id}")
     @ApiOperation(value = "Update a storage", response = StoreDTO.class)
     public ResponseEntity<StoreDTO> update(@PathVariable("id") Long id, @RequestBody @Valid StoreDTO storeDTO) throws BusinessException {
-
-        if(id != null) {
-            StoreDTO storeDToUpdated = this.storeService.update(id, storeDTO);
-            return new ResponseEntity<>(storeDToUpdated, HttpStatus.OK);
-        }
-        //logar -> update é aceito apenas para objetos que possuam ID
-        throw new BusinessException(OPERATION_NOT_ALLOWED);
+        StoreDTO storeDToUpdated = this.storeService.update(id, storeDTO);
+        return new ResponseEntity<>(storeDToUpdated, HttpStatus.OK);
     }
 
     @GetMapping

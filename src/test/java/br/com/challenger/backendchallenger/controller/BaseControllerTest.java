@@ -20,6 +20,7 @@ import java.io.IOException;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 
 @SpringBootTest(classes = { BackendChallengerApplication.class})
 @ActiveProfiles("test")
@@ -34,6 +35,17 @@ abstract class BaseControllerTest {
     @BeforeEach
     public void setUp() {
         this.mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
+    }
+
+    <T> T sendGet(String url, Class<T> clazz) throws Exception {
+        MvcResult mvcResult = this.sendGet(url);
+        return getResponseObject(mvcResult, clazz);
+    }
+
+    MvcResult sendGet(String url) throws Exception {
+        return this.mockMvc.perform(get(url)
+                .contentType(APPLICATION_JSON_VALUE))
+                .andReturn();
     }
 
     <T> T sendPost(String requestBody, String url, Class<T> clazz) throws Exception {

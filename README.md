@@ -54,10 +54,6 @@ scalability.
  Export the enviroment variable: 
  *-Dspring.profiles.active=development*
  
-## How to start PRODUCTION enviroment
- Run the command in server:
- *java -jar -Dspring.profiles.active=production {package}.jar*
- 
 ## If you don't have a local mysql server, execute:
 ```
 mkdir /home/${USER}/database_mysql
@@ -68,6 +64,10 @@ docker run --net host --name mysql -v /home/${USER}/database_mysql:/var/lib/mysq
 ```
 docker start mysql
 ```
+ 
+## How to start PRODUCTION enviroment
+ Run the command in server:
+ *java -jar -Dspring.profiles.active=production {package}.jar*
 
 ## API DOCUMENTATION:
 

@@ -37,6 +37,7 @@ public class StoreDTO {
         return id;
     }
 
+    @JsonIgnore
     public void setId(Long id) {
         this.id = id;
     }

@@ -46,7 +46,7 @@ scalability.
 * Clean Code
 
 ## Stack
-- Java 1.8
+- Java 11
 
 >WARNING: To start anyone enviroments, the database backend_challenger must be created
 
@@ -54,10 +54,21 @@ scalability.
  Export the enviroment variable: 
  *-Dspring.profiles.active=development*
  
+## If you don't have a local mysql server, execute:
+```
+mkdir /home/${USER}/database_mysql
+docker run --net host --name mysql -v /home/${USER}/database_mysql:/var/lib/mysql -e MYSQL_ALLOW_EMPTY_PASSWORD=yes -e MYSQL_DATABASE=backend_challenger -d mysql:8.0
+```
+
+>WARNING: if you execute the command in the top, in the next times, you should execute the command bellow:
+```
+docker start mysql
+```
+ 
 ## How to start PRODUCTION enviroment
  Run the command in server:
  *java -jar -Dspring.profiles.active=production {package}.jar*
- 
+
 ## API DOCUMENTATION:
 
 Afer you start the project, access [Documentation Link](http://localhost:8082/api/index.html) 

@@ -28,10 +28,19 @@ public class StoreService {
         return this.save(storeDTO);
     }
 
-    public Page<StoreDTO> find(Long id, String name, Pageable pageable) throws BusinessException {
+    public Page<StoreDTO> find(Long id, String name, Pageable pageable) {
         Page<StoreDTO> storesDTO = this.storeRepository.find(id, name, pageable);
         if(storesDTO != null && !storesDTO.isEmpty()) {
             return storesDTO;
+        }
+
+        throw new NotFoundException("Loja não encontrada!");
+    }
+
+    public StoreDTO find(Long id) {
+        Store store = this.storeRepository.find(id);
+        if(store != null) {
+            return StoreConverter.convert(store);
         }
 
         throw new NotFoundException("Loja não encontrada!");

@@ -21,4 +21,9 @@ public interface StoreRepository extends JpaRepository<Store, Long> {
             "AND (:storeName is null OR store.name LIKE %:storeName%)                         " +
             "AND (:storeId is null OR store.id = :storeId)                                    " )
     Page<StoreDTO> find(@Param("storeId") Long storeId, @Param("storeName") String storeName, Pageable pageable);
+
+    @Query("SELECT new br.com.challenger.backendchallenger.entity.Store(store.name) " +
+           "FROM Store store                                                        " +
+           "WHERE store.id = :id                                                    " )
+    Store find(@Param("id") Long id);
 }

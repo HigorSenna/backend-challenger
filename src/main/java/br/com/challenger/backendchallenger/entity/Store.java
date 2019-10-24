@@ -16,6 +16,13 @@ public class Store implements Serializable {
     @JoinColumn(name = "address_id", referencedColumnName = "id")
     private Address address;
 
+    public Store() {
+    }
+
+    public Store(String name) {
+        this.name = name;
+    }
+
     public Long getId() {
         return id;
     }

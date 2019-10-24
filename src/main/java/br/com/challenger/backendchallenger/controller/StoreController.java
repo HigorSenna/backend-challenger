@@ -30,26 +30,34 @@ public class StoreController {
     private StoreService storeService;
 
     @PostMapping
-    @ApiOperation(value = "Save a storage", response = StoreDTO.class)
+    @ApiOperation(value = "Save a storage")
     public ResponseEntity<StoreDTO> save(@RequestBody @Valid StoreDTO storeDTO) throws BusinessException {
         StoreDTO storeDToCreated = this.storeService.save(storeDTO);
         return new ResponseEntity<>(storeDToCreated, HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
-    @ApiOperation(value = "Update a storage", response = StoreDTO.class)
+    @ApiOperation(value = "Update a storage")
     public ResponseEntity<StoreDTO> update(@PathVariable("id") Long id, @RequestBody @Valid StoreDTO storeDTO) throws BusinessException {
         StoreDTO storeDToUpdated = this.storeService.update(id, storeDTO);
         return new ResponseEntity<>(storeDToUpdated, HttpStatus.OK);
     }
 
     @GetMapping
+    @ApiOperation(value = "Find pageable store(s)")
     public ResponseEntity<Page<StoreDTO>> find(@RequestParam(name = "id", required = false) Long id,
                                                @RequestParam(name = "name", required = false) String name,
-                                               Pageable pageable) throws BusinessException {
+                                               Pageable pageable) {
 
         Page<StoreDTO> storesDTO = this.storeService.find(id, name, pageable);
         return new ResponseEntity<>(storesDTO, HttpStatus.OK);
+    }
+
+    @GetMapping("/{id}")
+    @ApiOperation(value = "Find a store")
+    public ResponseEntity<StoreDTO> find(@PathVariable("id") Long id)  {
+        StoreDTO storeDTO = this.storeService.find(id);
+        return new ResponseEntity<>(storeDTO, HttpStatus.OK);
     }
 
     //TODO: Extrair para uma classe?

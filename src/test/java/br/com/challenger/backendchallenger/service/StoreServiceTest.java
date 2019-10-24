@@ -6,8 +6,7 @@ import br.com.challenger.backendchallenger.exception.NotFoundException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-
-import java.util.List;
+import org.springframework.data.domain.Page;
 
 class StoreServiceTest extends BaseServiceTest {
 
@@ -39,17 +38,17 @@ class StoreServiceTest extends BaseServiceTest {
     @Test
     void shouldReturnNotFoundExceptionWhenStoreNotFound() throws BusinessException {
         this.storeService.save(new StoreDTO("Store 4"));
-        Assertions.assertThrows(NotFoundException.class, () ->  this.storeService.find(null, "Loja458"));
+        Assertions.assertThrows(NotFoundException.class, () ->  this.storeService.find(null, "Loja458", null));
     }
 
     @Test
     void shouldReturnStoreByName() throws BusinessException {
         String storeName = super.randomString();
         this.storeService.save(new StoreDTO(storeName));
-        List<StoreDTO> storesDTO = this.storeService.find(null, storeName);
+        Page<StoreDTO> storesDTO = this.storeService.find(null, storeName, null);
         Assertions.assertAll(
                 () -> Assertions.assertNotNull(storesDTO),
-                () -> Assertions.assertEquals(1, storesDTO.size()),
+                () -> Assertions.assertEquals(1, storesDTO.getContent().size()),
                 () -> Assertions.assertEquals(storeName, storesDTO.stream().findFirst().get().getName())
         );
     }
@@ -57,18 +56,18 @@ class StoreServiceTest extends BaseServiceTest {
     @Test
     void shouldReturnStoreById() throws BusinessException {
         StoreDTO storeDtoSaved = this.storeService.save(new StoreDTO(super.randomString()));
-        List<StoreDTO> storesDtoFound = this.storeService.find(storeDtoSaved.getId(), null);
+        Page<StoreDTO> storesDtoFound = this.storeService.find(storeDtoSaved.getId(), null, null);
 
         Assertions.assertAll(
                 () -> Assertions.assertNotNull(storesDtoFound),
-                () -> Assertions.assertEquals(1, storesDtoFound.size()),
+                () -> Assertions.assertEquals(1, storesDtoFound.getContent().size()),
                 () -> Assertions.assertEquals(storeDtoSaved.getId(), storesDtoFound.stream().findFirst().get().getId())
         );
     }
 
     @Test
     void shouldReturnBusinessExceptionWhenAllParamsAreNull() {
-        Assertions.assertThrows(BusinessException.class, () ->  this.storeService.find(null, null));
+        Assertions.assertThrows(BusinessException.class, () ->  this.storeService.find(null, null, null));
     }
 
     @Test

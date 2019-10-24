@@ -8,6 +8,8 @@ import br.com.challenger.backendchallenger.exception.NotFoundException;
 import br.com.challenger.backendchallenger.repository.StoreRepository;
 import br.com.challenger.backendchallenger.validator.StoreValidator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -29,9 +31,9 @@ public class StoreService {
         return this.save(storeDTO);
     }
 
-    public List<StoreDTO> find(Long id, String name) throws BusinessException {
+    public Page<StoreDTO> find(Long id, String name, Pageable pageable) throws BusinessException {
         StoreValidator.fieldsValidation(new StoreDTO(id, name));
-        List<StoreDTO> storesDTO = this.storeRepository.find(id, name);
+        Page<StoreDTO> storesDTO = this.storeRepository.find(id, name, pageable);
         if(storesDTO != null && !storesDTO.isEmpty()) {
             return storesDTO;
         }

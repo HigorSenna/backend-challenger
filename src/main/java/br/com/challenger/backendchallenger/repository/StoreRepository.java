@@ -2,11 +2,11 @@ package br.com.challenger.backendchallenger.repository;
 
 import br.com.challenger.backendchallenger.dto.StoreDTO;
 import br.com.challenger.backendchallenger.entity.Store;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-
-import java.util.List;
 
 public interface StoreRepository extends JpaRepository<Store, Long> {
 
@@ -20,5 +20,5 @@ public interface StoreRepository extends JpaRepository<Store, Long> {
             "WHERE 1=1                                                                        " +
             "AND (:storeName is null OR store.name LIKE %:storeName%)                         " +
             "AND (:storeId is null OR store.id = :storeId)                                    " )
-    List<StoreDTO> find(@Param("storeId") Long storeId, @Param("storeName") String storeName);
+    Page<StoreDTO> find(@Param("storeId") Long storeId, @Param("storeName") String storeName, Pageable pageable);
 }

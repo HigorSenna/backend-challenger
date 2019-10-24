@@ -6,6 +6,9 @@ import br.com.challenger.backendchallenger.service.StoreService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -14,7 +17,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -42,10 +44,11 @@ public class StoreController {
     }
 
     @GetMapping
-    public ResponseEntity<List<StoreDTO>> find(@RequestParam(name = "id", required = false) Long id,
-                                               @RequestParam(name = "name", required = false) String name) throws BusinessException {
+    public ResponseEntity<Page<StoreDTO>> find(@RequestParam(name = "id", required = false) Long id,
+                                               @RequestParam(name = "name", required = false) String name,
+                                               Pageable pageable) throws BusinessException {
 
-        List<StoreDTO> storesDTO = this.storeService.find(id, name);
+        Page<StoreDTO> storesDTO = this.storeService.find(id, name, pageable);
         return new ResponseEntity<>(storesDTO, HttpStatus.OK);
     }
 

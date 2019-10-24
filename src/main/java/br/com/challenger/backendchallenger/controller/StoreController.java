@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -41,11 +42,11 @@ public class StoreController {
     }
 
     @GetMapping
-    public ResponseEntity<StoreDTO> find(@RequestParam(name = "id", required = false) Long id,
-                                         @RequestParam(name = "name", required = false) String name) throws BusinessException {
+    public ResponseEntity<List<StoreDTO>> find(@RequestParam(name = "id", required = false) Long id,
+                                               @RequestParam(name = "name", required = false) String name) throws BusinessException {
 
-        StoreDTO storeDTO = this.storeService.find(id, name);
-        return new ResponseEntity<>(storeDTO, HttpStatus.OK);
+        List<StoreDTO> storesDTO = this.storeService.find(id, name);
+        return new ResponseEntity<>(storesDTO, HttpStatus.OK);
     }
 
     //TODO: Extrair para uma classe?

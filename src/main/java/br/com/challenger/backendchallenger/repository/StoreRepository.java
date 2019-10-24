@@ -6,6 +6,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.List;
+
 public interface StoreRepository extends JpaRepository<Store, Long> {
 
     @Query("SELECT new br.com.challenger.backendchallenger.dto.StoreDTO(store.id, store.name) " +
@@ -16,7 +18,7 @@ public interface StoreRepository extends JpaRepository<Store, Long> {
     @Query("SELECT new br.com.challenger.backendchallenger.dto.StoreDTO(store.id, store.name) " +
             "FROM Store store                                                                 " +
             "WHERE 1=1                                                                        " +
-            "AND (:storeName is null OR store.name = :storeName)                              " +
+            "AND (:storeName is null OR store.name LIKE %:storeName%)                         " +
             "AND (:storeId is null OR store.id = :storeId)                                    " )
-    StoreDTO find(@Param("storeId") Long storeId, @Param("storeName") String storeName);
+    List<StoreDTO> find(@Param("storeId") Long storeId, @Param("storeName") String storeName);
 }

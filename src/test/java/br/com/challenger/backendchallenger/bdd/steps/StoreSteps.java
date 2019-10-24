@@ -10,6 +10,9 @@ import io.cucumber.java.en.Then;
 import org.junit.jupiter.api.Assertions;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.List;
+import java.util.Optional;
+
 public class StoreSteps {
 
     StoreDTO storeDTO;
@@ -31,13 +34,16 @@ public class StoreSteps {
     @Then("Insert the store")
     public void insertStore() throws BusinessException {
         StoreDTO storeDtoSaved = this.storeService.save(this.storeDTO);
-        StoreDTO storeDtoFound = this.storeService.find(storeDtoSaved.getId(), null);
+        List<StoreDTO> storesDtoFound = this.storeService.find(storeDtoSaved.getId(), null);
+        Optional<StoreDTO> storeDtoFoundOptional = storesDtoFound.stream().findFirst();
 
         Assertions.assertAll(
                 () -> Assertions.assertNotNull(storeDtoSaved),
-                () -> Assertions.assertNotNull(storeDtoFound),
-                () -> Assertions.assertEquals(storeDtoSaved.getId(), storeDtoFound.getId()),
-                () -> Assertions.assertEquals(storeDtoSaved.getName(), storeDtoFound.getName())
+                () -> Assertions.assertNotNull(storesDtoFound),
+                () -> Assertions.assertFalse(storesDtoFound.isEmpty()),
+                () -> Assertions.assertEquals(1, storesDtoFound.size()),
+                () -> Assertions.assertEquals(storeDtoSaved.getId(), storeDtoFoundOptional.get().getId()),
+                () -> Assertions.assertEquals(storeDtoSaved.getName(), storeDtoFoundOptional.get().getName())
         );
     }
 }

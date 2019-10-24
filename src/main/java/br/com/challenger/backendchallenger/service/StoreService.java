@@ -10,6 +10,8 @@ import br.com.challenger.backendchallenger.validator.StoreValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class StoreService {
 
@@ -27,11 +29,11 @@ public class StoreService {
         return this.save(storeDTO);
     }
 
-    public StoreDTO find(Long id, String name) throws BusinessException {
+    public List<StoreDTO> find(Long id, String name) throws BusinessException {
         StoreValidator.fieldsValidation(new StoreDTO(id, name));
-        StoreDTO storeDTO = this.storeRepository.find(id, name);
-        if(storeDTO != null) {
-            return storeDTO;
+        List<StoreDTO> storesDTO = this.storeRepository.find(id, name);
+        if(storesDTO != null && !storesDTO.isEmpty()) {
+            return storesDTO;
         }
 
         throw new NotFoundException("Loja não encontrada!");

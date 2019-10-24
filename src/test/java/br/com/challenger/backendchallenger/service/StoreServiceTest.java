@@ -7,6 +7,8 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.List;
+
 class StoreServiceTest extends BaseServiceTest {
 
     @Autowired
@@ -37,22 +39,31 @@ class StoreServiceTest extends BaseServiceTest {
     @Test
     void shouldReturnNotFoundExceptionWhenStoreNotFound() throws BusinessException {
         this.storeService.save(new StoreDTO("Store 4"));
-        Assertions.assertThrows(NotFoundException.class, () ->  this.storeService.find(null, "Store458"));
+        Assertions.assertThrows(NotFoundException.class, () ->  this.storeService.find(null, "Loja458"));
     }
 
     @Test
     void shouldReturnStoreByName() throws BusinessException {
         String storeName = super.randomString();
         this.storeService.save(new StoreDTO(storeName));
-        StoreDTO storeDTO = this.storeService.find(null, storeName);
-        Assertions.assertNotNull(storeDTO);
+        List<StoreDTO> storesDTO = this.storeService.find(null, storeName);
+        Assertions.assertAll(
+                () -> Assertions.assertNotNull(storesDTO),
+                () -> Assertions.assertEquals(1, storesDTO.size()),
+                () -> Assertions.assertEquals(storeName, storesDTO.stream().findFirst().get().getName())
+        );
     }
 
     @Test
     void shouldReturnStoreById() throws BusinessException {
         StoreDTO storeDtoSaved = this.storeService.save(new StoreDTO(super.randomString()));
-        StoreDTO storeDtoFound = this.storeService.find(storeDtoSaved.getId(), null);
-        Assertions.assertNotNull(storeDtoFound);
+        List<StoreDTO> storesDtoFound = this.storeService.find(storeDtoSaved.getId(), null);
+
+        Assertions.assertAll(
+                () -> Assertions.assertNotNull(storesDtoFound),
+                () -> Assertions.assertEquals(1, storesDtoFound.size()),
+                () -> Assertions.assertEquals(storeDtoSaved.getId(), storesDtoFound.stream().findFirst().get().getId())
+        );
     }
 
     @Test

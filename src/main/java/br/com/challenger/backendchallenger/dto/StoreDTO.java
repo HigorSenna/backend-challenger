@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.annotations.ApiModelProperty;
 
 import javax.validation.constraints.NotBlank;
+import java.util.Optional;
 
 
 public class StoreDTO {
@@ -26,6 +27,14 @@ public class StoreDTO {
         this.id = id;
         this.name = name;
     }
+    public static Optional<StoreDTO> resolve(StoreDTO storeDTO) {
+        if(storeDTO != null) {
+            return Optional.of(storeDTO);
+        }
+
+        return Optional.empty();
+    }
+
 
     @JsonIgnore
     public boolean isNew() {

@@ -2,10 +2,14 @@ package br.com.challenger.backendchallenger.controller;
 
 import br.com.challenger.backendchallenger.dto.ResponseDTO;
 import br.com.challenger.backendchallenger.dto.StoreDTO;
+import com.fasterxml.jackson.core.type.TypeReference;
 import org.junit.jupiter.api.Test;
 import org.junit.platform.runner.JUnitPlatform;
 import org.junit.runner.RunWith;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.web.servlet.MvcResult;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -77,15 +81,17 @@ class StoreControllerTest extends BaseControllerTest {
     }
 
     @Test
+    @SuppressWarnings("unchecked")
     public void shouldReturnTheStoreByName() throws Exception {
         String requestBody = super.convertToJson(new StoreDTO(super.randomString()));
         StoreDTO storeDtoCreated = super.sendPost(requestBody, STORE_PATH, StoreDTO.class);
         String path = STORE_PATH.concat("?").concat("name=").concat(storeDtoCreated.getName());
         MvcResult mvcResult = super.sendGet(path);
-        StoreDTO storeDtoFound = super.getResponseObject(mvcResult, StoreDTO.class);
+        Page<StoreDTO> storeDtoFoundPage = super.getPage(mvcResult);
+        StoreDTO storeDtoFound = storeDtoFoundPage.getContent().stream().findFirst().get();
 
         assertAll(
-                () -> assertNotNull(storeDtoFound),
+                () -> assertNotNull(storeDtoFoundPage),
                 () -> assertEquals(storeDtoCreated.getName(), storeDtoFound.getName()),
                 () -> assertEquals(storeDtoCreated.getId(), storeDtoFound.getId()),
                 () -> assertEquals(HttpStatus.OK.value(), super.getStatus(mvcResult))
@@ -109,7 +115,7 @@ class StoreControllerTest extends BaseControllerTest {
     }
 
     @Test
-    public void shouldReturnNotFoundWhenStoreIdNotFound() throws Exception {
+    public void shouldReturnNotFoundExceptionWhenSearchByIdAndDoesNotExists() throws Exception {
         Long storeNotValidId = 5568L;
         String path = STORE_PATH.concat("?").concat("id=").concat(String.valueOf(storeNotValidId));
         MvcResult mvcResult = super.sendGet(path);
@@ -122,7 +128,7 @@ class StoreControllerTest extends BaseControllerTest {
     }
 
     @Test
-    public void shouldReturnNotFoundWhenStoreNameNotFound() throws Exception {
+    public void shouldReturnNotFoundExceptionWhenStoreNameNotFound() throws Exception {
         String storeNotValidName = "NotFoundName";
         String path = STORE_PATH.concat("?").concat("name=").concat(storeNotValidName);
         MvcResult mvcResult = super.sendGet(path);

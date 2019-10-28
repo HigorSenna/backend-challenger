@@ -8,6 +8,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.json.JsonParseException;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
@@ -16,6 +19,8 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import java.io.IOException;
+import java.util.LinkedHashMap;
+import java.util.List;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -90,5 +95,14 @@ abstract class BaseControllerTest {
 
     String randomString() {
         return RandomStringUtils.randomAlphabetic(5);
+    }
+
+    @SuppressWarnings("unchecked")
+     Page getPage(MvcResult mvcResult) throws IOException {
+        LinkedHashMap page = getResponseObject(mvcResult, LinkedHashMap.class);
+        Integer pageNumber = (Integer) page.get("number");
+        Integer pageSize = (Integer) page.get("size");
+        List values = (List) page.get("content");
+        return new PageImpl(values, PageRequest.of(pageNumber,pageSize), values.size());
     }
 }

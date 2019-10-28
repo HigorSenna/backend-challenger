@@ -36,7 +36,7 @@ class StoreServiceTest extends BaseServiceTest {
     }
 
     @Test
-    void shouldReturnNotFoundExceptionWhenStoreNotFound() throws BusinessException {
+    void shouldReturnNotFoundExceptionWhenStoreNameNotFound() throws BusinessException {
         this.storeService.save(new StoreDTO("Store 4"));
         Assertions.assertThrows(NotFoundException.class, () ->  this.storeService.find(null, "Loja458", null));
     }
@@ -63,6 +63,11 @@ class StoreServiceTest extends BaseServiceTest {
                 () -> Assertions.assertEquals(1, storesDtoFound.getContent().size()),
                 () -> Assertions.assertEquals(storeDtoSaved.getId(), storesDtoFound.stream().findFirst().get().getId())
         );
+    }
+
+    @Test
+    void shouldReturnNotFoundExceptionWhenSearchByIdAndDoesNotExists() throws NotFoundException {
+        Assertions.assertThrows(NotFoundException.class, () ->  this.storeService.find(58958L));
     }
 
     @Test

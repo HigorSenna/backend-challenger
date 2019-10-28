@@ -3,6 +3,7 @@ package br.com.challenger.backendchallenger.controller;
 import br.com.challenger.backendchallenger.dto.StoreDTO;
 import br.com.challenger.backendchallenger.exception.BusinessException;
 import br.com.challenger.backendchallenger.service.StoreService;
+import com.fasterxml.jackson.annotation.JsonCreator;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;

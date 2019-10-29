@@ -41,7 +41,6 @@ public class StoreDTO {
         return this.id == null;
     }
 
-
     public Long getId() {
         return id;
     }

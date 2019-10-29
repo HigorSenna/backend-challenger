@@ -2,14 +2,13 @@ package br.com.challenger.backendchallenger.controller;
 
 import br.com.challenger.backendchallenger.dto.ResponseDTO;
 import br.com.challenger.backendchallenger.dto.StoreDTO;
+import br.com.challenger.backendchallenger.pagination.RestPageImpl;
 import com.fasterxml.jackson.core.type.TypeReference;
 import org.junit.jupiter.api.Test;
 import org.junit.platform.runner.JUnitPlatform;
 import org.junit.runner.RunWith;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.test.web.servlet.MvcResult;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -87,9 +86,8 @@ class StoreControllerTest extends BaseControllerTest {
         StoreDTO storeDtoCreated = super.sendPost(requestBody, STORE_PATH, StoreDTO.class);
         String path = STORE_PATH.concat("?").concat("name=").concat(storeDtoCreated.getName());
         MvcResult mvcResult = super.sendGet(path);
-        Page<StoreDTO> storeDtoFoundPage = super.getPage(mvcResult);
-        StoreDTO storeDtoFound = storeDtoFoundPage.getContent().stream().findFirst().get();
-
+        Page<StoreDTO> storeDtoFoundPage = super.getPage(mvcResult, new TypeReference<RestPageImpl<StoreDTO>>() {});
+        StoreDTO storeDtoFound = storeDtoFoundPage.stream().findFirst().get();
         assertAll(
                 () -> assertNotNull(storeDtoFoundPage),
                 () -> assertEquals(storeDtoCreated.getName(), storeDtoFound.getName()),
@@ -104,9 +102,11 @@ class StoreControllerTest extends BaseControllerTest {
         StoreDTO storeDtoCreated = super.sendPost(requestBody, STORE_PATH, StoreDTO.class);
         String path = STORE_PATH.concat("?").concat("id=").concat(String.valueOf(storeDtoCreated.getId()));
         MvcResult mvcResult = super.sendGet(path);
-        StoreDTO storeDtoFound = super.getResponseObject(mvcResult, StoreDTO.class);
+        Page<StoreDTO> storeDtoFoundPage = super.getPage(mvcResult, new TypeReference<RestPageImpl<StoreDTO>>() {});
+        StoreDTO storeDtoFound = storeDtoFoundPage.stream().findFirst().get();
 
         assertAll(
+                () -> assertNotNull(storeDtoFoundPage),
                 () -> assertNotNull(storeDtoFound),
                 () -> assertEquals(storeDtoCreated.getName(), storeDtoFound.getName()),
                 () -> assertEquals(storeDtoCreated.getId(), storeDtoFound.getId()),

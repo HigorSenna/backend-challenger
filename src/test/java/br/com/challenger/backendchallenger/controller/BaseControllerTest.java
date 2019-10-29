@@ -2,6 +2,7 @@ package br.com.challenger.backendchallenger.controller;
 
 import br.com.challenger.backendchallenger.BackendChallengerApplication;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.jupiter.api.BeforeEach;
@@ -9,8 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.json.JsonParseException;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
@@ -19,13 +18,9 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import java.io.IOException;
-import java.util.LinkedHashMap;
-import java.util.List;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 
 @SpringBootTest(classes = { BackendChallengerApplication.class})
 @ActiveProfiles("test")
@@ -97,12 +92,7 @@ abstract class BaseControllerTest {
         return RandomStringUtils.randomAlphabetic(5);
     }
 
-    @SuppressWarnings("unchecked")
-     Page getPage(MvcResult mvcResult) throws IOException {
-        LinkedHashMap page = getResponseObject(mvcResult, LinkedHashMap.class);
-        Integer pageNumber = (Integer) page.get("number");
-        Integer pageSize = (Integer) page.get("size");
-        List values = (List) page.get("content");
-        return new PageImpl(values, PageRequest.of(pageNumber,pageSize), values.size());
+    <T> Page getPage(MvcResult mvcResult, TypeReference<T> typeReference) throws IOException {
+        return new ObjectMapper().readValue(mvcResult.getResponse().getContentAsString(), typeReference);
     }
 }

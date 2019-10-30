@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class StoreService {
 
+    public static final String STORE_NOT_FOUND = "Loja não encontrada!";
     @Autowired
     private StoreRepository storeRepository;
 
@@ -29,12 +30,12 @@ public class StoreService {
     }
 
     public Page<StoreDTO> find(Long id, String name, Pageable pageable) {
-        Page<StoreDTO> storesDTO = this.storeRepository.find(id, name, pageable);
-        if(storesDTO != null && !storesDTO.isEmpty()) {
-            return storesDTO;
+        Page<StoreDTO> storeDtoPage = this.storeRepository.find(id, name, pageable);
+        if((id != null || name != null) && storeDtoPage.getContent().isEmpty()) {
+            throw new NotFoundException(STORE_NOT_FOUND);
         }
 
-        throw new NotFoundException("Loja não encontrada!");
+        return storeDtoPage;
     }
 
     public StoreDTO find(Long id) {
@@ -43,7 +44,7 @@ public class StoreService {
             return StoreConverter.convert(store);
         }
 
-        throw new NotFoundException("Loja não encontrada!");
+        throw new NotFoundException(STORE_NOT_FOUND);
     }
 
     private void storeValidations(StoreDTO storeDTO) throws BusinessException {

@@ -86,7 +86,7 @@ class StoreControllerTest extends BaseControllerTest {
         StoreDTO storeDtoCreated = super.sendPost(requestBody, STORE_PATH, StoreDTO.class);
         String path = STORE_PATH.concat("?").concat("name=").concat(storeDtoCreated.getName());
         MvcResult mvcResult = super.sendGet(path);
-        Page<StoreDTO> storeDtoFoundPage = super.getPage(mvcResult, new TypeReference<RestPageImpl<StoreDTO>>() {});
+        Page<StoreDTO> storeDtoFoundPage = super.getPage(mvcResult, getTypeReference());
         StoreDTO storeDtoFound = storeDtoFoundPage.stream().findFirst().get();
         assertAll(
                 () -> assertNotNull(storeDtoFoundPage),
@@ -102,7 +102,7 @@ class StoreControllerTest extends BaseControllerTest {
         StoreDTO storeDtoCreated = super.sendPost(requestBody, STORE_PATH, StoreDTO.class);
         String path = STORE_PATH.concat("?").concat("id=").concat(String.valueOf(storeDtoCreated.getId()));
         MvcResult mvcResult = super.sendGet(path);
-        Page<StoreDTO> storeDtoFoundPage = super.getPage(mvcResult, new TypeReference<RestPageImpl<StoreDTO>>() {});
+        Page<StoreDTO> storeDtoFoundPage = super.getPage(mvcResult, getTypeReference());
         StoreDTO storeDtoFound = storeDtoFoundPage.stream().findFirst().get();
 
         assertAll(
@@ -112,6 +112,11 @@ class StoreControllerTest extends BaseControllerTest {
                 () -> assertEquals(storeDtoCreated.getId(), storeDtoFound.getId()),
                 () -> assertEquals(HttpStatus.OK.value(), super.getStatus(mvcResult))
         );
+    }
+
+    private TypeReference<RestPageImpl<StoreDTO>> getTypeReference() {
+        return new TypeReference<RestPageImpl<StoreDTO>>() {
+        };
     }
 
     @Test
@@ -128,12 +133,11 @@ class StoreControllerTest extends BaseControllerTest {
     }
 
     @Test
-    public void shouldReturnNotFoundExceptionWhenStoreNameNotFound() throws Exception {
+    public void shouldNotFoundStatusWhenStoreNameNotFound() throws Exception {
         String storeNotValidName = "NotFoundName";
         String path = STORE_PATH.concat("?").concat("name=").concat(storeNotValidName);
         MvcResult mvcResult = super.sendGet(path);
         ResponseDTO responseDTO = super.getResponseObject(mvcResult, ResponseDTO.class);
-
         assertAll(
                 () -> assertNotNull(responseDTO),
                 () -> assertEquals(HttpStatus.NOT_FOUND.value(), super.getStatus(mvcResult))
@@ -141,7 +145,7 @@ class StoreControllerTest extends BaseControllerTest {
     }
 
     @Test
-    public void shouldReturnBusinessExceptionWhenAllParamsGetAreNull() throws Exception {
+    public void shouldAllStoresPageableWhenAllParamsGetAreNull() throws Exception {
         MvcResult mvcResult = super.sendGet(STORE_PATH);
         ResponseDTO responseDTO = super.getResponseObject(mvcResult, ResponseDTO.class);
 

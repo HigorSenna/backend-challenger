@@ -45,7 +45,8 @@ public class StoreDTO {
         return id;
     }
 
-    @JsonIgnore
+    // TODO: Não posso deixar o jsonIgnore aqui, pois em alguns casos preciso retornar o id para o client.
+//    @JsonIgnore
     public void setId(Long id) {
         this.id = id;
     }

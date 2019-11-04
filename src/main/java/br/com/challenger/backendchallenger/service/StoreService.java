@@ -1,6 +1,7 @@
 package br.com.challenger.backendchallenger.service;
 
 import br.com.challenger.backendchallenger.converter.StoreConverter;
+import br.com.challenger.backendchallenger.converter.StorePageConverter;
 import br.com.challenger.backendchallenger.dto.StoreDTO;
 import br.com.challenger.backendchallenger.entity.Store;
 import br.com.challenger.backendchallenger.exception.BusinessException;
@@ -35,12 +36,12 @@ public class StoreService {
     }
 
     public Page<StoreDTO> find(Long id, String name, Pageable pageable) {
-        Page<StoreDTO> storeDtoPage = this.storeRepository.find(id, name, pageable);
-        if((id != null || name != null) && storeDtoPage.getContent().isEmpty()) {
+        Page<Store> storePage = this.storeRepository.find(id, name, pageable);
+        if((id != null || name != null) && storePage.getContent().isEmpty()) {
             throw new NotFoundException(STORE_NOT_FOUND);
         }
 
-        return storeDtoPage;
+        return StorePageConverter.convert(storePage);
     }
 
     public StoreDTO find(Long id) {

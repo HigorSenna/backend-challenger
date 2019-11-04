@@ -25,8 +25,12 @@ public class StoreController {
 
     private static final String OPERATION_NOT_ALLOWED = "Operacao não permitida";
 
-    @Autowired
     private StoreService storeService;
+
+    @Autowired
+    public StoreController(StoreService storeService) {
+        this.storeService = storeService;
+    }
 
     @PostMapping
     @ApiOperation(value = "Save a storage")

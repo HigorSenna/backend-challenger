@@ -15,8 +15,13 @@ import org.springframework.stereotype.Service;
 public class StoreService {
 
     public static final String STORE_NOT_FOUND = "Loja não encontrada!";
-    @Autowired
+
     private StoreRepository storeRepository;
+
+    @Autowired
+    public StoreService(StoreRepository storeRepository) {
+        this.storeRepository = storeRepository;
+    }
 
     public StoreDTO save(StoreDTO storeDTO) throws BusinessException {
         this.storeValidations(storeDTO);

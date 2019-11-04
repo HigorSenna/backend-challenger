@@ -51,7 +51,6 @@ class StoreControllerTest extends BaseControllerTest {
                 () -> assertNotNull(responseDTO),
                 () -> assertEquals(HttpStatus.PRECONDITION_FAILED.value(), getStatus(mvcResult))
         );
-
     }
 
     @Test

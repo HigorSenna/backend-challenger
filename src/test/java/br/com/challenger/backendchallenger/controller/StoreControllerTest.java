@@ -145,13 +145,15 @@ class StoreControllerTest extends BaseControllerTest {
     }
 
     @Test
-    public void shouldAllStoresPageableWhenAllParamsGetAreNull() throws Exception {
+    public void shouldReturnAllStoresPageableWhenAllParamsGetAreNull() throws Exception {
+        String requestBody = super.convertToJson(new StoreDTO(super.randomString()));
+        super.sendPost(requestBody, STORE_PATH);
         MvcResult mvcResult = super.sendGet(STORE_PATH);
-        ResponseDTO responseDTO = super.getResponseObject(mvcResult, ResponseDTO.class);
+        Page<StoreDTO> storeDTOPage = super.getPage(mvcResult, getTypeReference());
 
         assertAll(
-                () -> assertNotNull(responseDTO),
-                () -> assertEquals(HttpStatus.PRECONDITION_FAILED.value(), super.getStatus(mvcResult))
+                () -> assertNotNull(storeDTOPage),
+                () -> assertTrue(storeDTOPage.getContent().size() >= 1)
         );
     }
 

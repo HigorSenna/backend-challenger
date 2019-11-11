@@ -19,7 +19,8 @@ public class Store implements Serializable {
     public Store() {
     }
 
-    public Store(String name) {
+    public Store(Long id, String name) {
+        this.id = id;
         this.name = name;
     }
 

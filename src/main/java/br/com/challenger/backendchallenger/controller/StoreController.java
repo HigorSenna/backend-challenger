@@ -3,7 +3,6 @@ package br.com.challenger.backendchallenger.controller;
 import br.com.challenger.backendchallenger.dto.StoreDTO;
 import br.com.challenger.backendchallenger.exception.BusinessException;
 import br.com.challenger.backendchallenger.service.StoreService;
-import com.fasterxml.jackson.annotation.JsonCreator;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,14 +25,22 @@ public class StoreController {
 
     private static final String OPERATION_NOT_ALLOWED = "Operacao não permitida";
 
-    @Autowired
     private StoreService storeService;
+
+    @Autowired
+    public StoreController(StoreService storeService) {
+        this.storeService = storeService;
+    }
 
     @PostMapping
     @ApiOperation(value = "Save a storage")
     public ResponseEntity<StoreDTO> save(@RequestBody @Valid StoreDTO storeDTO) throws BusinessException {
-        StoreDTO storeDToCreated = this.storeService.save(storeDTO);
-        return new ResponseEntity<>(storeDToCreated, HttpStatus.CREATED);
+        if(storeDTO.getId() == null) {
+            StoreDTO storeDToCreated = this.storeService.save(storeDTO);
+            return new ResponseEntity<>(storeDToCreated, HttpStatus.CREATED);
+        }
+
+        throw new BusinessException(OPERATION_NOT_ALLOWED);
     }
 
     @PutMapping("/{id}")

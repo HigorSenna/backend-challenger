@@ -1,6 +1,7 @@
 package br.com.challenger.backendchallenger.service;
 
 import br.com.challenger.backendchallenger.converter.StoreConverter;
+import br.com.challenger.backendchallenger.converter.StorePageConverter;
 import br.com.challenger.backendchallenger.dto.StoreDTO;
 import br.com.challenger.backendchallenger.entity.Store;
 import br.com.challenger.backendchallenger.exception.BusinessException;
@@ -14,8 +15,14 @@ import org.springframework.stereotype.Service;
 @Service
 public class StoreService {
 
-    @Autowired
+    public static final String STORE_NOT_FOUND = "Loja não encontrada!";
+
     private StoreRepository storeRepository;
+
+    @Autowired
+    public StoreService(StoreRepository storeRepository) {
+        this.storeRepository = storeRepository;
+    }
 
     public StoreDTO save(StoreDTO storeDTO) throws BusinessException {
         this.storeValidations(storeDTO);
@@ -29,12 +36,12 @@ public class StoreService {
     }
 
     public Page<StoreDTO> find(Long id, String name, Pageable pageable) {
-        Page<StoreDTO> storesDTO = this.storeRepository.find(id, name, pageable);
-        if(storesDTO != null && !storesDTO.isEmpty()) {
-            return storesDTO;
+        Page<Store> storePage = this.storeRepository.find(id, name, pageable);
+        if((id != null || name != null) && storePage.getContent().isEmpty()) {
+            throw new NotFoundException(STORE_NOT_FOUND);
         }
 
-        throw new NotFoundException("Loja não encontrada!");
+        return StorePageConverter.convert(storePage);
     }
 
     public StoreDTO find(Long id) {
@@ -43,7 +50,7 @@ public class StoreService {
             return StoreConverter.convert(store);
         }
 
-        throw new NotFoundException("Loja não encontrada!");
+        throw new NotFoundException(STORE_NOT_FOUND);
     }
 
     private void storeValidations(StoreDTO storeDTO) throws BusinessException {

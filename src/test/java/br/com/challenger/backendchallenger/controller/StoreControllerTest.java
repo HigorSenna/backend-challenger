@@ -51,13 +51,11 @@ class StoreControllerTest extends BaseControllerTest {
                 () -> assertNotNull(responseDTO),
                 () -> assertEquals(HttpStatus.PRECONDITION_FAILED.value(), getStatus(mvcResult))
         );
-
     }
 
     @Test
     public void shouldUpdateStore() throws Exception {
-        String requestBody = super.convertToJson(new StoreDTO(super.randomString()));
-        StoreDTO storeDtoCreated = super.sendPost(requestBody, STORE_PATH, StoreDTO.class);
+        StoreDTO storeDtoCreated = this.createRandomStore();
         storeDtoCreated.setName("StoreUpdated");
         String requestBodyToUpdate = super.convertToJson(storeDtoCreated);
 
@@ -81,12 +79,11 @@ class StoreControllerTest extends BaseControllerTest {
 
     @Test
     @SuppressWarnings("unchecked")
-    public void shouldReturnTheStoreByName() throws Exception {
-        String requestBody = super.convertToJson(new StoreDTO(super.randomString()));
-        StoreDTO storeDtoCreated = super.sendPost(requestBody, STORE_PATH, StoreDTO.class);
+    public void shouldReturnThePageableStoreByName() throws Exception {
+        StoreDTO storeDtoCreated = this.createRandomStore();
         String path = STORE_PATH.concat("?").concat("name=").concat(storeDtoCreated.getName());
         MvcResult mvcResult = super.sendGet(path);
-        Page<StoreDTO> storeDtoFoundPage = super.getPage(mvcResult, new TypeReference<RestPageImpl<StoreDTO>>() {});
+        Page<StoreDTO> storeDtoFoundPage = super.getPage(mvcResult, getTypeReference());
         StoreDTO storeDtoFound = storeDtoFoundPage.stream().findFirst().get();
         assertAll(
                 () -> assertNotNull(storeDtoFoundPage),
@@ -97,12 +94,11 @@ class StoreControllerTest extends BaseControllerTest {
     }
 
     @Test
-    public void shouldReturnTheStoreById() throws Exception {
-        String requestBody = super.convertToJson(new StoreDTO(super.randomString()));
-        StoreDTO storeDtoCreated = super.sendPost(requestBody, STORE_PATH, StoreDTO.class);
+    public void shouldReturnThePageableStoreById() throws Exception {
+        StoreDTO storeDtoCreated = this.createRandomStore();
         String path = STORE_PATH.concat("?").concat("id=").concat(String.valueOf(storeDtoCreated.getId()));
         MvcResult mvcResult = super.sendGet(path);
-        Page<StoreDTO> storeDtoFoundPage = super.getPage(mvcResult, new TypeReference<RestPageImpl<StoreDTO>>() {});
+        Page<StoreDTO> storeDtoFoundPage = super.getPage(mvcResult, getTypeReference());
         StoreDTO storeDtoFound = storeDtoFoundPage.stream().findFirst().get();
 
         assertAll(
@@ -112,6 +108,11 @@ class StoreControllerTest extends BaseControllerTest {
                 () -> assertEquals(storeDtoCreated.getId(), storeDtoFound.getId()),
                 () -> assertEquals(HttpStatus.OK.value(), super.getStatus(mvcResult))
         );
+    }
+
+    private TypeReference<RestPageImpl<StoreDTO>> getTypeReference() {
+        return new TypeReference<RestPageImpl<StoreDTO>>() {
+        };
     }
 
     @Test
@@ -128,12 +129,11 @@ class StoreControllerTest extends BaseControllerTest {
     }
 
     @Test
-    public void shouldReturnNotFoundExceptionWhenStoreNameNotFound() throws Exception {
+    public void shouldNotFoundStatusWhenStoreNameNotFound() throws Exception {
         String storeNotValidName = "NotFoundName";
         String path = STORE_PATH.concat("?").concat("name=").concat(storeNotValidName);
         MvcResult mvcResult = super.sendGet(path);
         ResponseDTO responseDTO = super.getResponseObject(mvcResult, ResponseDTO.class);
-
         assertAll(
                 () -> assertNotNull(responseDTO),
                 () -> assertEquals(HttpStatus.NOT_FOUND.value(), super.getStatus(mvcResult))
@@ -141,17 +141,56 @@ class StoreControllerTest extends BaseControllerTest {
     }
 
     @Test
-    public void shouldReturnBusinessExceptionWhenAllParamsGetAreNull() throws Exception {
+    public void shouldReturnAllStoresPageableWhenAllParamsGetAreNull() throws Exception {
+        String requestBody = super.convertToJson(new StoreDTO(super.randomString()));
+        super.sendPost(requestBody, STORE_PATH);
         MvcResult mvcResult = super.sendGet(STORE_PATH);
-        ResponseDTO responseDTO = super.getResponseObject(mvcResult, ResponseDTO.class);
+        Page<StoreDTO> storeDTOPage = super.getPage(mvcResult, getTypeReference());
 
         assertAll(
-                () -> assertNotNull(responseDTO),
-                () -> assertEquals(HttpStatus.PRECONDITION_FAILED.value(), super.getStatus(mvcResult))
+                () -> assertNotNull(storeDTOPage),
+                () -> assertTrue(storeDTOPage.getContent().size() >= 1)
         );
     }
 
+    @Test
+    public void shouldReturnTheStoreById() throws Exception {
+        StoreDTO storeDtoCreated = this.createRandomStore();
+        String path = this.getFindOnlyUrl(storeDtoCreated.getId());
+        MvcResult mvcResult = super.sendGet(path);
+        StoreDTO storeDtoFound = this.getResponseObject(mvcResult, StoreDTO.class);
+
+        assertAll(
+                () -> assertNotNull(storeDtoFound),
+                () -> assertEquals(storeDtoCreated.getName(), storeDtoFound.getName()),
+                () -> assertEquals(storeDtoCreated.getId(), storeDtoFound.getId()),
+                () -> assertEquals(HttpStatus.OK.value(), super.getStatus(mvcResult))
+        );
+    }
+
+    @Test
+    public void shouldReturnNotFoundWhenStoreIdNotExists() throws Exception {
+        String path = this.getFindOnlyUrl(1235L);
+        MvcResult mvcResult = super.sendGet(path);
+        ResponseDTO responseDTO = this.getResponseObject(mvcResult, ResponseDTO.class);
+
+        assertAll(
+                () -> assertNotNull(responseDTO),
+                () -> assertEquals(HttpStatus.NOT_FOUND.value(), responseDTO.getCode())
+        );
+    }
+
+    private StoreDTO createRandomStore() throws Exception {
+        String requestBody = super.convertToJson(new StoreDTO(super.randomString()));
+        return super.sendPost(requestBody, STORE_PATH, StoreDTO.class);
+    }
+
     private String getPutUrl(Long storeCreatedId) {
+        String storeCreatedIdString = String.valueOf(storeCreatedId);
+        return STORE_PATH.concat("/").concat(storeCreatedIdString);
+    }
+
+    private String getFindOnlyUrl(Long storeCreatedId) {
         String storeCreatedIdString = String.valueOf(storeCreatedId);
         return STORE_PATH.concat("/").concat(storeCreatedIdString);
     }

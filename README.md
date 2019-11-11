@@ -71,4 +71,4 @@ docker start mysql
 
 ## API DOCUMENTATION:
 
-Afer you start the project, access [Documentation Link](http://localhost:8082/api/index.html) 
+Afer you start the project, access [Documentation Link](http://localhost:8082/api/swagger-ui.html) 
